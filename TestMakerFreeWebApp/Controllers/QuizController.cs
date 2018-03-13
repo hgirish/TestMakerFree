@@ -11,6 +11,25 @@ namespace TestMakerFreeWebApp.Controllers
     [Route("api/[controller]")]
     public class QuizController : Controller
     {
+        /// <summary>
+        /// Retrieves the Answer with the given {id}
+        /// </summary>
+        /// &lt;param name="id">The ID of an existing Answer</param>
+        /// <returns>the Answer with the given {id}</returns>
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var v = new QuizViewModel
+            {
+                Id = id,
+                Title = $"Sample quiz with id {id}",
+                Description = "Not a real quiz: it's just a sample",
+                CreatedDate = DateTime.Now,
+                LastModifiedDate = DateTime.Now
+            };
+            return new JsonResult(v, new JsonSerializerSettings { Formatting = Formatting.Indented });
+        }
+
         [HttpGet("Latest/{num:int?}")]
         public IActionResult Latest(int num = 10)
         {
@@ -71,6 +90,35 @@ namespace TestMakerFreeWebApp.Controllers
                 {
                     Formatting = Formatting.Indented
                 });
+        }
+     
+    
+        /// <summary>
+        /// Adds a new Answer to the Database
+        /// </summary>
+        /// <param name="m">The AnswerViewModel containing the data to insert</param>
+        [HttpPut]
+        public IActionResult Put(QuizViewModel m)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// Edit the Answer with the given {id}
+        /// </summary>
+        /// <param name="m">The AnswerViewModel containing the data to update</param>
+        [HttpPost]
+        public IActionResult Post(QuizViewModel m)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// Deletes the Answer with the given {id} from the Database
+        /// </summary>
+        /// <param name="id">The ID of an existing Answer</param>
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
