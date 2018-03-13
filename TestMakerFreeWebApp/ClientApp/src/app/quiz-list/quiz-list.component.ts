@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { basename } from 'path';
+
 
 @Component({
   selector: 'quiz-list',
