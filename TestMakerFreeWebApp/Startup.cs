@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TestMakerFreeWebApp.Data;
 
 namespace TestMakerFreeWebApp
 {
@@ -19,6 +21,15 @@ namespace TestMakerFreeWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(
+                Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddEntityFrameworkSqlServer();
+
+
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
