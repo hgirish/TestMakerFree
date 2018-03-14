@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.ViewModels;
 
 namespace TestMakerFreeWebApp.Controllers
@@ -11,6 +13,12 @@ namespace TestMakerFreeWebApp.Controllers
     [Route("api/[controller]")]
     public class QuizController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public QuizController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         /// <summary>
         /// Retrieves the Answer with the given {id}
         /// </summary>
@@ -19,44 +27,21 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var v = new QuizViewModel
-            {
-                Id = id,
-                Title = $"Sample quiz with id {id}",
-                Description = "Not a real quiz: it's just a sample",
-                CreatedDate = DateTime.Now,
-                LastModifiedDate = DateTime.Now
-            };
-            return new JsonResult(v, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            var quiz = _context.Quizzes.Where(x => x.Id == id).FirstOrDefault();
+
+            return new JsonResult(quiz.Adapt<QuizViewModel>(),
+                new JsonSerializerSettings { Formatting = Formatting.Indented });
         }
 
         [HttpGet("Latest/{num:int?}")]
         public IActionResult Latest(int num = 10)
         {
-            var sampleQuizzes = new List<QuizViewModel>();
+            var latest = _context.Quizzes
+                .OrderByDescending(q => q.CreatedDate)
+                .Take(num)
+                .ToArray();
 
-            sampleQuizzes.Add(new QuizViewModel()
-            {
-                Id = 1,
-                Title = "Which Shingeki No Kyojin character are you?",
-                Description = "Anime-related personality test",
-                CreatedDate = DateTime.Now,
-                LastModifiedDate = DateTime.Now
-            });
-
-            for (int i = 2; i <= num; i++)
-            {
-                sampleQuizzes.Add(new QuizViewModel()
-                {
-                    Id = i,
-                    Title = String.Format("Sample Quiz {0}", i),
-                    Description = "This is a sample quiz",
-                    CreatedDate = DateTime.Now,
-                    LastModifiedDate = DateTime.Now
-                });
-            }
-
-            return new JsonResult(sampleQuizzes,
+            return new JsonResult(latest.Adapt<QuizViewModel[]>(),
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.Indented
@@ -67,11 +52,13 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("ByTitle/{num:int?}")]
         public IActionResult ByTitle(int num = 10)
         {
-            var sampleQuizzes = ((JsonResult)Latest(num)).Value
-                as List<QuizViewModel>;
+            var byTitle = _context.Quizzes
+                .OrderBy(q => q.Title)
+                .Take(num)
+                .ToArray();
 
             return new JsonResult(
-                sampleQuizzes.OrderBy(t=>t.Title),
+                byTitle.Adapt<QuizViewModel[]>(),
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.Indented
@@ -81,11 +68,13 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("Random/{num:int?}")]
         public IActionResult Random(int num = 10)
         {
-            var sampleQuizzes = ((JsonResult)Latest(num)).Value
-                as List<QuizViewModel>;
+            var randomQuizzed = _context.Quizzes
+                .OrderBy(q => Guid.NewGuid())
+                .Take(num)
+                .ToArray();
 
             return new JsonResult(
-                sampleQuizzes.OrderBy(t => Guid.NewGuid()),
+                randomQuizzed.Adapt<QuizViewModel[]>(),
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.Indented
