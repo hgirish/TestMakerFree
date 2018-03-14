@@ -21,5 +21,7 @@ namespace TestMakerFreeWebApp.ViewModels
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }
         public DateTime LastModifiedDate { get; set; }
-    }
+    public int? MinValue { get; internal set; }
+    public int? MaxValue { get; internal set; }
+  }
 }
