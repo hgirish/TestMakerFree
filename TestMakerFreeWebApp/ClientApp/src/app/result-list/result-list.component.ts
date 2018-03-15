@@ -1,0 +1,63 @@
+import { Component, OnInit, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+
+@Component({
+  selector: 'result-list',
+  templateUrl: './result-list.component.html',
+  styleUrls: ['./result-list.component.css']
+})
+export class ResultListComponent implements OnChanges {
+  @Input() quiz: Quiz;
+  results: Result[];
+  title: string;
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Inject('BASE_URL') private baseUrl: string
+  ) {
+    this.results = [];
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (typeof changes['quiz'] !== 'undefined') {
+      var change = changes['quiz'];
+      if (!change.isFirstChange()) {
+        this.loadData();
+      }
+    }
+  }
+
+  loadData() {
+    var url = this.baseUrl + "api/result/All/" + this.quiz.Id;
+    this.http.get<Result[]>(url).subscribe(res => {
+      this.results = res;
+      console.log(this.results);
+    }, error => console.error(error));
+  }
+
+  onCreate() {
+    this.router.navigate(['/result/create', this.quiz.Id]);
+
+  }
+
+  onEdit(result: Result) {
+    this.router.navigate(['/result/edit/', result.Id]);
+  }
+
+  onDelete(result: Result) {
+    if (confirm("Do you really want to delete this result?")) {
+      var url = this.baseUrl + "api/result/" + result.Id;
+      this.http.delete(url)
+        .subscribe(res => {
+          console.log(`Result ${result.Id} has been deleted.`);
+
+          this.loadData();
+        }, error => console.error(error));
+    }
+  }
+
+
+
+}

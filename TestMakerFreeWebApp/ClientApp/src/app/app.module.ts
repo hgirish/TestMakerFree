@@ -15,6 +15,10 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { QuizEditComponent } from './quiz-edit/quiz-edit.component';
 import { QuestionListComponent } from './question-list/question-list.component';
 import { QuestionEditComponent } from './question-edit/question-edit.component';
+import { AnswerListComponent } from './answer-list/answer-list.component';
+import { AnswerEditComponent } from './answer-edit/answer-edit.component';
+import { ResultListComponent } from './result-list/result-list.component';
+import { ResultEditComponent } from './result-edit/result-edit.component';
 
 
 @NgModule({
@@ -30,6 +34,10 @@ import { QuestionEditComponent } from './question-edit/question-edit.component';
     QuizEditComponent,
     QuestionListComponent,
     QuestionEditComponent,
+    AnswerListComponent,
+    AnswerEditComponent,
+    ResultListComponent,
+    ResultEditComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -45,6 +53,10 @@ import { QuestionEditComponent } from './question-edit/question-edit.component';
       { path: 'quiz/:id', component: QuizComponent },
       { path: 'question/create/:id', component: QuestionEditComponent },
       { path: 'question/edit/:id', component: QuestionEditComponent },
+      { path: 'answer/create/:id', component: AnswerEditComponent },
+      { path: 'answer/edit/:id', component: AnswerEditComponent },
+      {path: 'result/create/:id', component: ResultEditComponent},
+      {path: 'result/edit/:id', component: ResultEditComponent},
       { path: '**', component:PageNotFoundComponent }
     ])
   ],
