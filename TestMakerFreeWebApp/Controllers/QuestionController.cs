@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,23 +8,20 @@ using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using TestMakerFreeWebApp.ViewModels;
 
-namespace TestMakerFreeWebApp.Controllers
-{
+namespace TestMakerFreeWebApp.Controllers {
   [Route("api/[controller]")]
-  public class QuestionController : Controller
+  public class QuestionController : BaseApiController
   {
-    private readonly ApplicationDbContext _dbContext;
 
-    public QuestionController(ApplicationDbContext dbContext)
-    {
-      _dbContext = dbContext;
-    }
+    public QuestionController(ApplicationDbContext dbContext) : base(dbContext) { }
+
     [HttpGet("All/{quizId}")]
     public IActionResult All(int quizId)
     {
-      var questions = _dbContext.Questions.Where(q => q.QuizId == quizId).ToArray();
+      var questions = DbContext.Questions.Where(q => q.QuizId == quizId).ToArray();
 
-      return Json(questions.Adapt<QuestionViewModel[]>());
+      return base.Json(questions.Adapt<QuestionViewModel[]>(),
+        JsonSettings);
     }
     /// <summary>
     /// Retrieves the Question with the given {id}
@@ -36,7 +31,7 @@ namespace TestMakerFreeWebApp.Controllers
     [HttpGet("{id}")]
     public IActionResult Get(int id)
     {
-      var question = _dbContext.Questions.Where(i => i.Id == id).FirstOrDefault();
+      var question = DbContext.Questions.Where(i => i.Id == id).FirstOrDefault();
 
       if (question == null)
       {
@@ -69,9 +64,9 @@ namespace TestMakerFreeWebApp.Controllers
       question.CreatedDate = DateTime.Now;
       question.LastModifiedDate = question.CreatedDate;
 
-      _dbContext.Questions.Add(question);
+      DbContext.Questions.Add(question);
 
-      _dbContext.SaveChanges();
+      DbContext.SaveChanges();
 
       return Json(question.Adapt<QuestionViewModel>());
     }
@@ -86,7 +81,7 @@ namespace TestMakerFreeWebApp.Controllers
       {
         return StatusCode(StatusCodes.Status500InternalServerError);
       }
-      var question = _dbContext.Questions.FirstOrDefault(x => x.Id == model.Id);
+      var question = DbContext.Questions.FirstOrDefault(x => x.Id == model.Id);
 
       if (question == null)
       {
@@ -102,7 +97,7 @@ namespace TestMakerFreeWebApp.Controllers
 
       question.LastModifiedDate = question.CreatedDate;
 
-      _dbContext.SaveChanges();
+      DbContext.SaveChanges();
 
       return Json(question.Adapt<QuestionViewModel>());
     }
@@ -113,7 +108,7 @@ namespace TestMakerFreeWebApp.Controllers
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-      var question = _dbContext.Questions.FirstOrDefault(x => x.Id == id);
+      var question = DbContext.Questions.FirstOrDefault(x => x.Id == id);
 
       if (question == null)
       {
@@ -122,8 +117,8 @@ namespace TestMakerFreeWebApp.Controllers
           Error = $"Question ID {id} has not been found."
         });
       }
-      _dbContext.Questions.Remove(question);
-      _dbContext.SaveChanges();
+      DbContext.Questions.Remove(question);
+      DbContext.SaveChanges();
 
       return Ok();
 

@@ -13,6 +13,8 @@ import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { QuizEditComponent } from './quiz-edit/quiz-edit.component';
+import { QuestionListComponent } from './question-list/question-list.component';
+import { QuestionEditComponent } from './question-edit/question-edit.component';
 
 
 @NgModule({
@@ -26,6 +28,8 @@ import { QuizEditComponent } from './quiz-edit/quiz-edit.component';
     LoginComponent,
     PageNotFoundComponent,
     QuizEditComponent,
+    QuestionListComponent,
+    QuestionEditComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -39,6 +43,8 @@ import { QuizEditComponent } from './quiz-edit/quiz-edit.component';
       { path: 'quiz/create', component: QuizEditComponent },
       { path: 'quiz/edit/:id', component: QuizEditComponent },
       { path: 'quiz/:id', component: QuizComponent },
+      { path: 'question/create/:id', component: QuestionEditComponent },
+      { path: 'question/edit/:id', component: QuestionEditComponent },
       { path: '**', component:PageNotFoundComponent }
     ])
   ],
