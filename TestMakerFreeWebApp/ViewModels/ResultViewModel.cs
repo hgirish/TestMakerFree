@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +21,7 @@ namespace TestMakerFreeWebApp.ViewModels
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }
         public DateTime LastModifiedDate { get; set; }
-    public int? MinValue { get; internal set; }
-    public int? MaxValue { get; internal set; }
+    public int? MinValue { get;  set; }
+    public int? MaxValue { get;  set; }
   }
 }

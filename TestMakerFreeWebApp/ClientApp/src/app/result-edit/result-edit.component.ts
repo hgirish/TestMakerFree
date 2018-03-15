@@ -49,7 +49,7 @@ export class ResultEditComponent implements OnInit {
         .subscribe(res => {
           var v = res;
           console.log(`Result ${v.Id} has been created.`);
-          this.router.navigate(['quit/edit', v.QuizId]);
+          this.router.navigate(['quiz/edit', v.QuizId]);
         }, error => console.error(error));
     }
   }

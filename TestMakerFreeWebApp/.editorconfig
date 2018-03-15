@@ -5,7 +5,7 @@ root = true
 trim_trailing_whitespace = false
 
 [*.{py,rst,txt}]
-end_of_line = LF
+end_of_line = crlf
 indent_size = 4
 indent_style = space
 trim_trailing_whitespace = true
@@ -14,7 +14,7 @@ trim_trailing_whitespace = true
 end_of_line = LF
 indent_size = 2
 indent_style = space
-root = true
+
 
 [*.{cs,vb}]
 indent_size = 4

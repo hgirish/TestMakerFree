@@ -1,7 +1,6 @@
-import { Component, OnInit,Inject,OnChanges,SimpleChanges } from '@angular/core';
+import { Component, Inject,OnChanges,SimpleChanges,Input } from '@angular/core';
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { Input } from '@angular/core/src/metadata/directives';
 
 @Component({
   selector: 'answer-list',
@@ -20,8 +19,7 @@ export class AnswerListComponent implements OnChanges {
     this.answers = [];
   }
 
-  ngOnInit() {
-  }
+
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof changes['question'] != 'undefined') {

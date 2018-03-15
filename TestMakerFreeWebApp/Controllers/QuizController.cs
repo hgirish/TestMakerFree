@@ -11,13 +11,11 @@ using TestMakerFreeWebApp.ViewModels;
 namespace TestMakerFreeWebApp.Controllers
 {
   [Route("api/[controller]")]
-  public class QuizController : Controller
+  public class QuizController : BaseApiController
   {
-    private readonly ApplicationDbContext _context;
 
-    public QuizController(ApplicationDbContext context)
+    public QuizController(ApplicationDbContext context) :base(context)
     {
-      _context = context;
     }
     /// <summary>
     /// Retrieves the Quiz with the given {id}
@@ -27,7 +25,7 @@ namespace TestMakerFreeWebApp.Controllers
     [HttpGet("{id}")]
     public IActionResult Get(int id)
     {
-      var quiz = _context.Quizzes.Where(x => x.Id == id).FirstOrDefault();
+      var quiz = DbContext.Quizzes.Where(x => x.Id == id).FirstOrDefault();
       if (quiz == null)
       {
         return NotFound(new
@@ -38,56 +36,46 @@ namespace TestMakerFreeWebApp.Controllers
 
 
 
-      return new JsonResult(quiz.Adapt<QuizViewModel>(),
-          new JsonSerializerSettings { Formatting = Formatting.Indented });
+      return new JsonResult(quiz.Adapt<QuizViewModel>(), JsonSettings);
     }
 
     [HttpGet("Latest/{num:int?}")]
     public IActionResult Latest(int num = 10)
     {
-      var latest = _context.Quizzes
+      var latest = DbContext.Quizzes
           .OrderByDescending(q => q.CreatedDate)
           .Take(num)
           .ToArray();
 
       return new JsonResult(latest.Adapt<QuizViewModel[]>(),
-          new JsonSerializerSettings
-          {
-            Formatting = Formatting.Indented
-          });
+          JsonSettings);
 
     }
 
     [HttpGet("ByTitle/{num:int?}")]
     public IActionResult ByTitle(int num = 10)
     {
-      var byTitle = _context.Quizzes
+      var byTitle = DbContext.Quizzes
           .OrderBy(q => q.Title)
           .Take(num)
           .ToArray();
 
       return new JsonResult(
           byTitle.Adapt<QuizViewModel[]>(),
-          new JsonSerializerSettings
-          {
-            Formatting = Formatting.Indented
-          });
+         JsonSettings);
     }
 
     [HttpGet("Random/{num:int?}")]
     public IActionResult Random(int num = 10)
     {
-      var randomQuizzed = _context.Quizzes
+      var randomQuizzed = DbContext.Quizzes
           .OrderBy(q => Guid.NewGuid())
           .Take(num)
           .ToArray();
 
       return new JsonResult(
           randomQuizzed.Adapt<QuizViewModel[]>(),
-          new JsonSerializerSettings
-          {
-            Formatting = Formatting.Indented
-          });
+          JsonSettings);
     }
 
 
@@ -105,23 +93,24 @@ namespace TestMakerFreeWebApp.Controllers
         return StatusCode(StatusCodes.Status500InternalServerError);
       }
 
-      var quiz = new Quiz();
-      quiz.Title = model.Title;
-      quiz.Description = model.Description;
-      quiz.Text = model.Text;
-      quiz.Notes = model.Notes;
+      var quiz = new Quiz {
+        Title = model.Title,
+        Description = model.Description,
+        Text = model.Text,
+        Notes = model.Notes,
 
-      quiz.CreatedDate = DateTime.Now;
+        CreatedDate = DateTime.Now
+      };
       quiz.LastModifiedDate = quiz.CreatedDate;
 
-      quiz.UserId = _context.Users.Where(u => u.UserName == "Admin").FirstOrDefault().Id;
+      quiz.UserId = DbContext.Users.Where(u => u.UserName == "Admin").FirstOrDefault().Id;
 
-      _context.Quizzes.Add(quiz);
+      DbContext.Quizzes.Add(quiz);
 
-      _context.SaveChanges();
+      DbContext.SaveChanges();
 
       return new JsonResult(quiz.Adapt<QuizViewModel>(),
-        new JsonSerializerSettings { Formatting = Formatting.Indented });
+       JsonSettings);
 
     }
     /// <summary>
@@ -136,7 +125,7 @@ namespace TestMakerFreeWebApp.Controllers
         return StatusCode(StatusCodes.Status500InternalServerError);
       }
 
-      var quiz = _context.Quizzes.Where(q => q.Id == model.Id).FirstOrDefault();
+      var quiz = DbContext.Quizzes.Where(q => q.Id == model.Id).FirstOrDefault();
 
       if (quiz == null)
       {
@@ -153,10 +142,10 @@ namespace TestMakerFreeWebApp.Controllers
 
       quiz.LastModifiedDate = quiz.CreatedDate;
 
-      _context.SaveChanges();
+      DbContext.SaveChanges();
 
       return new JsonResult(quiz.Adapt<QuizViewModel>(),
-        new JsonSerializerSettings { Formatting = Formatting.Indented });
+        JsonSettings);
     }
     /// <summary>
     /// Deletes the Quiz with the given {id} from the Database
@@ -165,14 +154,14 @@ namespace TestMakerFreeWebApp.Controllers
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-      var quiz = _context.Quizzes.Where(q => q.Id == id).FirstOrDefault();
+      var quiz = DbContext.Quizzes.Where(q => q.Id == id).FirstOrDefault();
 
       if (quiz == null)
       {
         return NotFound(new { Error = $"Quiz ID {id} has not been found." });
       }
-      _context.Quizzes.Remove(quiz);
-      _context.SaveChanges();
+      DbContext.Quizzes.Remove(quiz);
+      DbContext.SaveChanges();
 
       return Ok();
     }

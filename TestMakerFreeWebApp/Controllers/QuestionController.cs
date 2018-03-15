@@ -41,14 +41,14 @@ namespace TestMakerFreeWebApp.Controllers {
         });
       }
 
-      return Json(question.Adapt<QuestionViewModel>(), new JsonSerializerSettings { Formatting = Formatting.Indented });
+      return Json(question.Adapt<QuestionViewModel>(), JsonSettings);
     }
     /// <summary>
     /// Adds a new Question to the Database
     /// </summary>
     /// <param name="m">The QuestionViewModel containing the data to insert</param>
     [HttpPut]
-    public IActionResult Put(QuestionViewModel model)
+    public IActionResult Put([FromBody] QuestionViewModel model)
     {
       if (model == null )
       {
@@ -68,7 +68,7 @@ namespace TestMakerFreeWebApp.Controllers {
 
       DbContext.SaveChanges();
 
-      return Json(question.Adapt<QuestionViewModel>());
+      return Json(question.Adapt<QuestionViewModel>(), JsonSettings);
     }
     /// <summary>
     /// Edit the Question with the given {id}
@@ -99,7 +99,7 @@ namespace TestMakerFreeWebApp.Controllers {
 
       DbContext.SaveChanges();
 
-      return Json(question.Adapt<QuestionViewModel>());
+      return Json(question.Adapt<QuestionViewModel>(), JsonSettings);
     }
     /// <summary>
     /// Deletes the Question with the given {id} from the Database

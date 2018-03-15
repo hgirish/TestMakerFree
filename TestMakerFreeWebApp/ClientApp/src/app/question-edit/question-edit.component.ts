@@ -36,6 +36,7 @@ export class QuestionEditComponent implements OnInit {
   }
 
   onSubmit(question: Question) {
+    console.log(`question: ${question.QuizId} ${question.Text}`);
     var url = this.baseUrl + "api/question";
     if (this.editMode) {
       this.http.post<Question>(url, question)
@@ -49,7 +50,7 @@ export class QuestionEditComponent implements OnInit {
         .subscribe(res => {
           var v = res;
           console.log(`Question ${v.Id} has been created.`);
-          this.router.navigate(['quit/edit', v.QuizId]);
+          this.router.navigate(['quiz/edit', v.QuizId]);
         }, error => console.error(error));
     }
   }

@@ -21,5 +21,4 @@
     <input *ngIf="!editMode" type="button" value="Create the Result!" (click)="onSubmit(result)" />
     <input type="button" value="Cancel" (click)="onBack()" />
   </div>
-  <answer-list *ngIf="editMode" [result]="result"></answer-list>
 </div>

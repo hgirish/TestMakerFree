@@ -1,9 +1,14 @@
 <h2>{{title}}</h2>
+
+  <p>Id: {{question.Id}}</p>
+  <p>QuizId: {{question.QuizId}}</p>
+<p>Text: {{question.Text}}</p>
+
 <div class="question-edit">
   <div>
     <label for="text">Question text:</label>
     <br />
-    <textarea [(ngModel)]="question.Text" placeholder="enter a suitable text..."></textarea>
+    <textarea  [(ngModel)]="question.Text" placeholder="enter a suitable text..."></textarea>
   </div>
   <div>
     <input *ngIf="editMode" type="button" value="Apply Changes" (click)="onSubmit(question)" />

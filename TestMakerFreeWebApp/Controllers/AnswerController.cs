@@ -13,25 +13,20 @@ using Microsoft.AspNetCore.Http;
 namespace TestMakerFreeWebApp.Controllers
 {
   [Route("api/[controller]")]
-  public class AnswerController : Controller
+  public class AnswerController : BaseApiController
   {
-    private readonly ApplicationDbContext _dbContext;
 
-    public AnswerController(ApplicationDbContext dbContext)
+    public AnswerController(ApplicationDbContext dbContext):base(dbContext)
     {
-      _dbContext = dbContext;
     }
     [HttpGet("All/{questionId}")]
     public IActionResult All(int questionId)
     {
-      var answers = _dbContext.Answers.Where(q => q.QuestionId == questionId).ToArray();
+      var answers = DbContext.Answers.Where(q => q.QuestionId == questionId).ToArray();
 
       return new JsonResult(
-          answers.Adapt<AnswerViewModel[]>(),
-          new Newtonsoft.Json.JsonSerializerSettings
-          {
-            Formatting = Newtonsoft.Json.Formatting.Indented
-          });
+          answers.Adapt<AnswerViewModel[]>(),JsonSettings
+          );
 
     }
     /// <summary>
@@ -42,7 +37,7 @@ namespace TestMakerFreeWebApp.Controllers
     [HttpGet("{id}")]
     public IActionResult Get(int id)
     {
-      var answer = _dbContext.Answers.FirstOrDefault(i => i.Id == id);
+      var answer = DbContext.Answers.FirstOrDefault(i => i.Id == id);
       if (answer == null)
       {
         return NotFound(new
@@ -50,7 +45,7 @@ namespace TestMakerFreeWebApp.Controllers
           Error = $"Answer with ID {id} not found."
         });
       }
-      return Json(answer.Adapt<AnswerViewModel>());
+      return Json(answer.Adapt<AnswerViewModel>(), JsonSettings);
     }
     /// <summary>
     /// Adds a new Answer to the Database
@@ -72,10 +67,10 @@ namespace TestMakerFreeWebApp.Controllers
       answer.CreatedDate = DateTime.Now;
       answer.LastModifiedDate = answer.CreatedDate;
 
-      _dbContext.Answers.Add(answer);
-      _dbContext.SaveChanges();
+      DbContext.Answers.Add(answer);
+      DbContext.SaveChanges();
 
-      return Json(answer.Adapt<AnswerViewModel>());
+      return Json(answer.Adapt<AnswerViewModel>(), JsonSettings);
     }
     /// <summary>
     /// Edit the Answer with the given {id}
@@ -89,7 +84,7 @@ namespace TestMakerFreeWebApp.Controllers
         return StatusCode(StatusCodes.Status500InternalServerError);
       }
 
-      var answer = _dbContext.Answers.FirstOrDefault(x => x.Id == model.Id);
+      var answer = DbContext.Answers.FirstOrDefault(x => x.Id == model.Id);
 
       if (answer == null)
       {
@@ -106,10 +101,10 @@ namespace TestMakerFreeWebApp.Controllers
 
       answer.LastModifiedDate = answer.CreatedDate;
 
-      _dbContext.SaveChanges();
+      DbContext.SaveChanges();
 
 
-      return Json(answer.Adapt<AnswerViewModel>());
+      return Json(answer.Adapt<AnswerViewModel>(), JsonSettings);
     }
     /// <summary>
     /// Deletes the Answer with the given {id} from the Database
@@ -118,7 +113,7 @@ namespace TestMakerFreeWebApp.Controllers
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-      var answer = _dbContext.Answers.FirstOrDefault(i => i.Id == id);
+      var answer = DbContext.Answers.FirstOrDefault(i => i.Id == id);
       if (answer == null)
       {
         return NotFound(new
@@ -126,8 +121,8 @@ namespace TestMakerFreeWebApp.Controllers
           Error = $"Answer with ID {id} not found."
         });
       }
-      _dbContext.Answers.Remove(answer);
-      _dbContext.SaveChanges();
+      DbContext.Answers.Remove(answer);
+      DbContext.SaveChanges();
 
       return Ok();
     }
