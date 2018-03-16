@@ -1,13 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TestMakerFreeWebApp.Data.Models;
 
-namespace TestMakerFreeWebApp.Data
-{
-    public class DbSeeder
+namespace TestMakerFreeWebApp.Data {
+  public class DbSeeder
     {
         public static void Seed(ApplicationDbContext dbContext)
         {

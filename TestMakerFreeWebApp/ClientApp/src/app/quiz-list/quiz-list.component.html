@@ -1,11 +1,17 @@
-<h2>{{title}}</h2>
+<div class="card {{class}}">
+  <h4 class="card-title">{{title}}</h4>
+  <div class="card-text">
+    <ul class="list-group list-group-flush">
+      <li *ngFor="let quiz of quizzes"
+          class="list-group-item"
+          [class.selected]="quiz === selectedQuiz"
+          (click)="onSelect(quiz)">
+        <img class="card-img-left rounded-circle" src="https://lorempixel.com/50/50/?random={{quiz.Id}}" alt="{{quiz.Title}}"  />
+        <span>{{quiz.Title}}</span>
+      </li>
+    </ul>
+  </div>
+</div>
 
-<ul class="quizzes">
-  <li *ngFor="let quiz of quizzes"
-      [class.selected]="quiz === selectedQuiz"
-      (click)="onSelect(quiz)"
-      >
-    <span>{{quiz.Title}}</span>
-  </li>
-</ul>
-<!--<quiz *ngIf="selectedQuiz" [quiz]="selectedQuiz"></quiz>-->
+
+

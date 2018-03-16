@@ -1,11 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
-using System.Collections.Generic;
 
-namespace TestMakerFreeWebApp.Data.Migrations
-{
-    public partial class Initial : Migration
+namespace TestMakerFreeWebApp.Data.Migrations {
+  public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

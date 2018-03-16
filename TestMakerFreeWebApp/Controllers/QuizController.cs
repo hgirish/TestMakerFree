@@ -1,15 +1,13 @@
 using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using TestMakerFreeWebApp.ViewModels;
 
-namespace TestMakerFreeWebApp.Controllers
-{
+namespace TestMakerFreeWebApp.Controllers {
   [Route("api/[controller]")]
   public class QuizController : BaseApiController
   {

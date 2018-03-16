@@ -1,17 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TestMakerFreeWebApp.ViewModels;
 using Mapster;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 
-namespace TestMakerFreeWebApp.Controllers
-{
+namespace TestMakerFreeWebApp.Controllers {
   [Route("api/[controller]")]
   public class ResultController : BaseApiController
   {
