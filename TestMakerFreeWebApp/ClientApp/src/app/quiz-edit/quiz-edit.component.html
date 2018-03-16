@@ -5,10 +5,10 @@
     <br />
     <input  [(ngModel)]="quiz.Title" placeholder="choose a title" />
   </div>
-  <div>
+  <div class="form-group">
     <label for="description">Quiz description:</label>
     <br />
-    <input 
+    <input class="form-control"
            [(ngModel)]="quiz.Description" placeholder="enter a description..." />
   </div>
   <div>
@@ -18,11 +18,11 @@
   </div>
 
   <div>
-    <input *ngIf="editMode" type="button" value="Apply Changes" (click)="onSubmit(quiz)" />
+    <input *ngIf="editMode" class="btn btn-success" type="button" value="Apply Changes" (click)="onSubmit(quiz)" />
 
-    <input *ngIf="!editMode" type="button" value="Create a Quiz!" (click)="onSubmit(quiz)" />
+    <input *ngIf="!editMode" class="btn btn-primary" type="button" value="Create a Quiz!" (click)="onSubmit(quiz)" />
 
-    <input type="button" value="Cancel" (click)="onBack()" />
+    <input type="button" class="btn btn-warning" value="Cancel" (click)="onBack()" />
   </div>
   <question-list [quiz]="quiz" *ngIf="editMode"></question-list>
   <result-list *ngIf="editMode" [quiz]="quiz"></result-list>
