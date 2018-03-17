@@ -1,1 +1,1 @@
-﻿ul.quizzes li{color:#000acb;cursor:pointer}ul.quizzes li.selected{background-color:#ccc}
+﻿.card .card-header{color:#fefefe}.card .card-header .glyphicon{float:right;font-size:41px;color:#d6d6d6}.latest{border-color:#384a5d}.latest .card-header{background-color:#384a5d}.latest .card-header .glyphicon:before{content:""}.byTitle{border-color:#4b657f}.byTitle .card-header{background-color:#4b657f}.byTitle .card-header .glyphicon:before{content:""}.random{border-color:#617992}.random .card-header{background-color:#617992}.random .card-header .glyphicon:before{content:""}

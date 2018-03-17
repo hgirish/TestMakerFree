@@ -1,34 +1,45 @@
 <div class='main-nav'>
-    <div class='navbar navbar-dark bg-dark navbar-inverse'>
-      <div class='navbar-header'>
-       
-        <quiz-search class="search-navmenu" placeholder="Type here..."></quiz-search>
-      </div>
-        <div class='clearfix'></div>
-        <div [ngClass]='{ "in": isExpanded }'>
-            <ul class='nav navbar-nav '>
-                <li [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-                    <a [routerLink]='["/"]' (click)='collapse()' class="nav-item nav-link">
-                        <span class='glyphicon glyphicon-home'></span> Home
-                    </a>
-                </li>
 
-              <li [routerLinkActive]="['link-active']" >
-                <a [routerLink]="['/about']" class="nav-item nav-link">
-                  <span class="glyphicon glyphicon-info-sign"></span> About
-                </a>
-              </li>
-               <li [routerLinkActive]="['link-active']">
-                 <a [routerLink]="['/login']" class="nav-item nav-link">
-                   <span class="glyphicon glyphicon-log-in"></span> Login
-                 </a>
-               </li>
-              <li [routerLinkActive]="['link-active']">
-                <a [routerLink]="['/quiz/create']" class="nav-item nav-link">
-                  <span class="glyphicon glyphicon-pencil"></span> Create Quiz
-                </a>
-              </li>
-            </ul>
-        </div>
+  <div class='navbar-header'>
+    <quiz-search class="search-navmenu" placeholder="Type here..."></quiz-search>
+  </div>
+  <div class='navbar navbar-dark bg-dark navbar-expand-sm'>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" [ngClass]='{ "in": isExpanded }'>
+      <div class="clearfix"></div>
+
+      <ul class='nav flex-column  navbar-nav mr-auto '>
+        <li class="nav-item" [routerLinkActive]='["link-active"]'
+            [routerLinkActiveOptions]='{ exact: true }'>
+          <a [routerLink]='["/"]' (click)='collapse()' class="nav-link">
+            <i class="fas fa-home fa-lg"></i>
+            Home
+          </a>
+        </li>
+        <li class="nav-item" [routerLinkActive]="['link-active']">
+          <a [routerLink]="['/about']" class="nav-link">
+            <span class="fas fa-info-circle"></span> About
+          </a>
+        </li>
+        <li class="nav-item" [routerLinkActive]="['link-active']">
+          <a [routerLink]="['/login']" class="nav-link">
+            <span class="fas fa-sign-in-alt"></span> Login
+          </a>
+        </li>
+        <li class="nav-item" [routerLinkActive]="['link-active']">
+          <a [routerLink]="['/quiz/create']" class="nav-link">
+            <span class="fa fa-pencil-alt"></span> Create Quiz
+          </a>
+        </li>
+      </ul>
     </div>
+  </div>
 </div>
+
+
+
+

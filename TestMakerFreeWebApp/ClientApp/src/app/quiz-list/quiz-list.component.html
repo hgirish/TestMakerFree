@@ -1,6 +1,8 @@
-<div class="card {{class}}">
-  <h4 class="card-title">{{title}}</h4>
-  <div class="card-text">
+<div class="card bg-primary {{class}}">
+  <h4 class="card-title card-header">
+  <span class="glyphicon"></span>
+  {{title}}</h4>
+  <div class="card-text card-body">
     <ul class="list-group list-group-flush">
       <li *ngFor="let quiz of quizzes"
           class="list-group-item"
