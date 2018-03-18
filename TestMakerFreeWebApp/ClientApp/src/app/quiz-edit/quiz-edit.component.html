@@ -1,29 +1,58 @@
-<h2>{{title}}</h2>
+
 <div class="quiz-edit">
-  <div>
-    <label for="title">Quiz title</label>
-    <br />
-    <input  [(ngModel)]="quiz.Title" placeholder="choose a title" />
-  </div>
-  <div class="form-group">
-    <label for="description">Quiz description:</label>
-    <br />
-    <input class="form-control"
-           [(ngModel)]="quiz.Description" placeholder="enter a description..." />
-  </div>
-  <div>
-    <label for="text">Quiz informative text:</label>
-    <br />
-<textarea  [(ngModel)]="quiz.Text" placeholder="enter a text..."></textarea>
-  </div>
+  <h2>{{title}}</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      
+      <label for="title">Quiz title</label>
+      <br />
+      <input formControlName="Title" required
+             class="form-control"
+             [ngClass]="{'is-invalid' : hasError('Title') }"
+             placeholder="choose a title" />
 
-  <div>
-    <input *ngIf="editMode" class="btn btn-success" type="button" value="Apply Changes" (click)="onSubmit(quiz)" />
+      <div *ngIf="hasError('Title')" class="form-text text-danger">
+        Title is a required field: please insert a valid title.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description">Quiz description:</label>
+      <br />
+      <input class="form-control"
+             formControlName="Description"
+             placeholder="enter a description..." />
+    </div>
+    <div class="form-group">
+      <label for="text">Quiz informative text:</label>
+      <br />
+<textarea formControlName="Text"
+          class="form-control"
+          placeholder="enter a text..."></textarea>
+    </div>
 
-    <input *ngIf="!editMode" class="btn btn-primary" type="button" value="Create a Quiz!" (click)="onSubmit(quiz)" />
+    <div class="form-group commands">
 
-    <input type="button" class="btn btn-warning" value="Cancel" (click)="onBack()" />
-  </div>
+      <button *ngIf="editMode"
+              type="submit"
+              [disabled]="form.invalid"
+              class="btn btn-success" >
+        <i class="fas fa-save"></i>
+        Apply Changes
+      </button>
+
+      <button *ngIf="!editMode"
+              class="btn btn-primary"
+              [disabled]="form.invalid"
+              type="submit" >
+        <i class="fas fa-pencil-alt"></i>
+        Create a Quiz!
+      </button>
+
+      <button *ngIf="!editMode" type="submit" class="btn btn-warning"  (click)="onBack()" >
+      <i class="fas fa-cancel"></i>  Cancel
+      </button>
+    </div>
+  </form>
   <question-list [quiz]="quiz" *ngIf="editMode"></question-list>
   <result-list *ngIf="editMode" [quiz]="quiz"></result-list>
 </div>
