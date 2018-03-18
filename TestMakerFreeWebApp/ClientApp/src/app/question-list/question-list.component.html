@@ -14,8 +14,14 @@
             {{question.Text}}
           </td>
           <td>
-            <input type="button" value="Edit" (click)="onEdit(question)" />
-            <input type="button" value="Delete" (click)="onDelete(question)" />
+            <button class="btn btn-xs btn-warning"  (click)="onEdit(question)">
+              <i class="fas fa-pencil-alt"></i>
+             &nbsp; Edit
+            </button>
+            <button class="btn btn-xs btn-danger"  (click)="onDelete(question)" >
+              <i class="fas fa-trash-alt"></i>
+             &nbsp; Delete
+            </button>
           </td>
         </tr>
       </tbody>
@@ -27,5 +33,5 @@
   click on <strong>Add a new Question</strong> button to add the first one!
 </div>
 <button (click)="onCreate()" class="btn btn-sm btn-primary">
-  <i class="fas fa-plus"></i>  Add a new Question
+  <i class="fas fa-plus"></i>&nbsp;  Add a new Question
 </button>
