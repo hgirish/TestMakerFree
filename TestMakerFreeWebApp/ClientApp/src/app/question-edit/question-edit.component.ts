@@ -12,6 +12,7 @@ export class QuestionEditComponent implements OnInit {
   question: Question;
   editMode: boolean;
   form: FormGroup;
+  activityLog: string;
 
   constructor(private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -43,6 +44,30 @@ export class QuestionEditComponent implements OnInit {
     this.form = this.fb.group({
       Text: ['', Validators.required]
     });
+    this.activityLog = '';
+    this.log("Form has been initialized.");
+
+    this.form.valueChanges
+      .subscribe(val => {
+        if (!this.form.dirty) {
+          this.log("Form Model has been loaded.")
+        } else {
+          this.log("Form was updated by the user.")
+        }
+      });
+    this.form.get('Text')!.valueChanges
+      .subscribe(val => {
+        if (!this.form.dirty) {
+          this.log("Text control has been loaded with initial values.");
+        } else {
+          this.log("Text control was updated by the user.")
+        }
+      })
+  }
+
+  log(str: string) {
+    this.activityLog += "[" + new Date().toLocaleString()
+      + "] " + str + "<br />";
   }
 
   updateForm() {

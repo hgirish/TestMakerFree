@@ -56,3 +56,19 @@
   <question-list [quiz]="quiz" *ngIf="editMode"></question-list>
   <result-list *ngIf="editMode" [quiz]="quiz"></result-list>
 </div>
+<div class="card bg-light" style="margin-top:30px;">
+  <h4 class="card-header bg-dark bg-primary text-white">
+    Form Debug Info
+  </h4>
+  <div class="card-body">
+    <h5 class="card-title"><strong>Form Value:</strong></h5>
+    <div class="card-text">
+      {{form.value | json}}
+    </div>
+    <hr />
+    <h5 class="card-title"><strong>Form Status:</strong></h5>
+    <div class="card-text">
+      {{form.status | json }}
+    </div>
+  </div>
+</div>
