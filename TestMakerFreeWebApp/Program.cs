@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using TestMakerFreeWebApp.Data;
+using TestMakerFreeWebApp.Data.Models;
 
 namespace TestMakerFreeWebApp
 {
@@ -13,8 +15,11 @@ namespace TestMakerFreeWebApp
             using (var scope = host.Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+        var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+
                 dbContext.Database.EnsureCreated();
-                DbSeeder.Seed(dbContext);
+                DbSeeder.Seed(dbContext, roleManager, userManager);
             }
             host.Run();
         }

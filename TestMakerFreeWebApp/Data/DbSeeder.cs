@@ -1,16 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using TestMakerFreeWebApp.Data.Models;
 
 namespace TestMakerFreeWebApp.Data {
   public class DbSeeder
     {
-        public static void Seed(ApplicationDbContext dbContext)
+        public static void Seed(ApplicationDbContext dbContext,
+          RoleManager<IdentityRole> roleManager,
+          UserManager<ApplicationUser> userManager)
         {
             if (!dbContext.Users.Any())
             {
-                CreateUsers(dbContext);
+        CreateUsers(dbContext, roleManager, userManager)
+  .GetAwaiter()
+  .GetResult();
             }
             if (!dbContext.Quizzes.Any())
             {
@@ -21,17 +27,17 @@ namespace TestMakerFreeWebApp.Data {
         private static void CreateQuizzes(ApplicationDbContext dbContext)
         {
             // local variables
-            DateTime createdDate = new DateTime(2016, 03, 01, 12, 30, 00);
+            var createdDate = new DateTime(2016, 03, 01, 12, 30, 00);
             DateTime lastModifiedDate = DateTime.Now;
-            // retrieve the admin user, which we'll use as default author.
-            var authorId = dbContext.Users
+      // retrieve the admin user, which we'll use as default author.
+      string authorId = dbContext.Users
             .Where(u => u.UserName == "Admin")
             .FirstOrDefault()
             .Id;
 #if DEBUG
-            // create 47 sample quizzes with auto-generated data
-            // (including questions, answers & results)
-            var num = 47;
+      // create 47 sample quizzes with auto-generated data
+      // (including questions, answers & results)
+      int num = 47;
             for (int i = 1; i <= num; i++)
             {
                 CreateSampleQuiz(
@@ -158,26 +164,47 @@ namespace TestMakerFreeWebApp.Data {
         }
     
 
-        private static void CreateUsers(ApplicationDbContext dbContext)
+        private static async Task  CreateUsers(ApplicationDbContext dbContext,
+          RoleManager<IdentityRole> roleManager,
+UserManager<ApplicationUser> userManager)
         {
-            DateTime createdDate = new DateTime(2016, 03, 01, 12, 30, 00);
+            var createdDate = new DateTime(2016, 03, 01, 12, 30, 00);
             DateTime lastModifiedDate = DateTime.Now;
+
+      string role_Administrator = "Administrator";
+      string role_RegisteredUser = "RegisteredUser";
+
+      if (!await roleManager.RoleExistsAsync(role_Administrator)) {
+        await roleManager.CreateAsync(new IdentityRole(role_Administrator));
+      }
+      if (!await roleManager.RoleExistsAsync(role_RegisteredUser)) {
+        await roleManager.CreateAsync(new IdentityRole(role_RegisteredUser));
+      }
 
             var userAdmin = new ApplicationUser
             {
+              SecurityStamp = Guid.NewGuid().ToString(),
                 Id = Guid.NewGuid().ToString(),
                 UserName = "Admin",
                 Email = "admin@example.com",
                 CreatedDate = createdDate,
                 LastModifiedDate = lastModifiedDate
             };
-            dbContext.Users.Add(userAdmin);
+      if (await userManager.FindByNameAsync(userAdmin.UserName) == null) {
+        await userManager.CreateAsync(userAdmin, "Pass4Admin");
+        await userManager.AddToRoleAsync(userAdmin, role_RegisteredUser);
+        await userManager.AddToRoleAsync(userAdmin, role_Administrator);
+        userAdmin.EmailConfirmed = true;
+        userAdmin.LockoutEnabled = false;
+      }
+            //dbContext.Users.Add(userAdmin);
 
 #if DEBUG
             // Create some sample registered user accounts (if they don't exist            already)
             var user_Ryan = new ApplicationUser()
             {
-                Id = Guid.NewGuid().ToString(),
+              SecurityStamp = Guid.NewGuid().ToString(),
+               // Id = Guid.NewGuid().ToString(),
                 UserName = "Ryan",
                 Email = "ryan@testmakerfree.com",
                 CreatedDate = createdDate,
@@ -185,7 +212,8 @@ namespace TestMakerFreeWebApp.Data {
             };
             var user_Solice = new ApplicationUser()
             {
-                Id = Guid.NewGuid().ToString(),
+              SecurityStamp = Guid.NewGuid().ToString(),
+             // Id = Guid.NewGuid().ToString(),
                 UserName = "Solice",
                 Email = "solice@testmakerfree.com",
                 CreatedDate = createdDate,
@@ -193,16 +221,35 @@ namespace TestMakerFreeWebApp.Data {
             };
             var user_Vodan = new ApplicationUser()
             {
-                Id = Guid.NewGuid().ToString(),
-                UserName = "Vodan",
+              SecurityStamp = Guid.NewGuid().ToString(),
+              // Id = Guid.NewGuid().ToString(),
+              UserName = "Vodan",
                 Email = "vodan@testmakerfree.com",
                 CreatedDate = createdDate,
                 LastModifiedDate = lastModifiedDate
             };
+      if (await userManager.FindByNameAsync(user_Ryan.UserName) == null) {
+        await userManager.CreateAsync(user_Ryan, "Pass4Ryan");
+        await userManager.AddToRoleAsync(user_Ryan, role_RegisteredUser);
+        user_Ryan.EmailConfirmed = true;
+        user_Ryan.LockoutEnabled = false;
+      }
+      if (await userManager.FindByNameAsync(user_Solice.UserName) == null) {
+        await userManager.CreateAsync(user_Solice, "Pass4Solice");
+        await userManager.AddToRoleAsync(user_Solice, role_RegisteredUser);
+        user_Solice.EmailConfirmed = true;
+        user_Solice.LockoutEnabled = false;
+      }
+      if (await userManager.FindByNameAsync(user_Vodan.UserName) == null) {
+        await userManager.CreateAsync(user_Vodan, "Pass4Vodan");
+        await userManager.AddToRoleAsync(user_Vodan, role_RegisteredUser);
+        user_Vodan.EmailConfirmed = true;
+        user_Vodan.LockoutEnabled = false;
+      }
             // Insert sample registered users into the Database
-            dbContext.Users.AddRange(user_Ryan, user_Solice, user_Vodan);
+           // dbContext.Users.AddRange(user_Ryan, user_Solice, user_Vodan);
 #endif
-            dbContext.SaveChanges();
+         await    dbContext.SaveChangesAsync();
         }
     }
 }
