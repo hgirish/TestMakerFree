@@ -1,23 +1,52 @@
 <h2>{{title}}</h2>
 <div class="answer-edit">
-  <div>
-    <label for="text">Answer text:</label>
-    <br />
-    <textarea [(ngModel)]="answer.Text" placeholder="enter a suitable text..."></textarea>
-  </div>
-  <div>
-    <label for="value">Score Value:</label>
-    <br />
-    <select [(ngModel)]="answer.Value">
-      <option *ngFor="let num of [-5, -4 -3, -2, -1, 0, 1, 2, 3, 4, 5]"
-              [value]="num">
-        {{num}}
-      </option>
-    </select>
-  </div>
-  <div>
-    <input *ngIf="editMode" class="btn btn-default" type="button" value="Apply Changes"  (click)="onSubmit(answer)" />
-    <input *ngIf="!editMode" type="button" value="Create the Answer!" (click)="onSubmit(answer)" />
-    <input type="button" value="Cancel" (click)="onBack()" />
-  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="text">Answer text:</label>
+      <br />
+      <textarea formControlName="Text" required class="form-control"
+                [ngClass]="{ 'is-invalid': hasError('Text') }"
+                placeholder="enter a suitable text..."></textarea>
+      <div *ngIf="hasError('Text')" class="form-text text-danger">
+        Text is a required field: please insert a valid text.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="value">Score Value:</label>
+      <br />
+      <select formControlName="Value" required
+              [ngClass]="{ 'is-invalid': hasError('Value') }"
+              class="form-control">
+        <option value="">Pick a value...</option>
+        <option *ngFor="let num of [-5, -4 -3, -2, -1, 0, 1, 2, 3, 4, 5]"
+                [value]="num">
+          {{num}}
+        </option>
+      </select>
+      <div *ngIf="hasError('Value')" class="form-text text-danger">
+        Please selet a valid number between -5 and 5.
+      </div>
+    </div>
+
+    <div class="form-group commands">
+
+          <button *ngIf="editMode" type="submit"
+              [disabled]="form.invalid"
+              class="btn btn-success">
+        <i class="fas fa-save"></i>
+        Apply Changes
+      </button>
+      <button *ngIf="!editMode"
+              [disabled]="form.invalid"
+              class="btn btn-primary"
+              type="submit">
+        <i class="fas fa-pencil-alt"></i>
+        Create the Answer!
+      </button>
+              
+      <button *ngIf="!editMode" type="submit" class="btn btn-warning"
+              (click)="onBack()">Cancel</button>
+
+    </div>
+  </form>
 </div>
