@@ -6,13 +6,18 @@ using Mapster;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace TestMakerFreeWebApp.Controllers {
   [Route("api/[controller]")]
   public class AnswerController : BaseApiController
   {
 
-    public AnswerController(ApplicationDbContext dbContext):base(dbContext)
+    public AnswerController(ApplicationDbContext context,
+      RoleManager<IdentityRole> roleManager,
+      UserManager<ApplicationUser> userManager,
+      IConfiguration configuration) : base(context, roleManager, userManager, configuration)
     {
     }
     [HttpGet("All/{questionId}")]

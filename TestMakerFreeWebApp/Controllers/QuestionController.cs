@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using Mapster;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using TestMakerFreeWebApp.ViewModels;
@@ -12,7 +14,10 @@ namespace TestMakerFreeWebApp.Controllers {
   public class QuestionController : BaseApiController
   {
 
-    public QuestionController(ApplicationDbContext dbContext) : base(dbContext) { }
+    public QuestionController(ApplicationDbContext context,
+      RoleManager<IdentityRole> roleManager,
+      UserManager<ApplicationUser> userManager,
+      IConfiguration configuration) : base(context, roleManager, userManager, configuration) { }
 
     [HttpGet("All/{quizId}")]
     public IActionResult All(int quizId)

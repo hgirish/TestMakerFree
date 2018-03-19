@@ -1,6 +1,8 @@
 using Mapster;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using TestMakerFreeWebApp.Data;
@@ -9,10 +11,13 @@ using TestMakerFreeWebApp.ViewModels;
 
 namespace TestMakerFreeWebApp.Controllers {
   [Route("api/[controller]")]
-  public class QuizController : BaseApiController
-  {
+  public class QuizController : BaseApiController {
 
-    public QuizController(ApplicationDbContext context) :base(context)
+    public QuizController(ApplicationDbContext context,
+      RoleManager<IdentityRole> roleManager,
+      UserManager<ApplicationUser> userManager,
+      IConfiguration configuration
+      ) : base(context, roleManager, userManager, configuration)
     {
     }
     /// <summary>
@@ -24,10 +29,8 @@ namespace TestMakerFreeWebApp.Controllers {
     public IActionResult Get(int id)
     {
       var quiz = DbContext.Quizzes.Where(x => x.Id == id).FirstOrDefault();
-      if (quiz == null)
-      {
-        return NotFound(new
-        {
+      if (quiz == null) {
+        return NotFound(new {
           Error = $"Quiz ID {id} has not been found"
         });
       }
@@ -86,8 +89,7 @@ namespace TestMakerFreeWebApp.Controllers {
     {
       // return a generic HTTP Status 500 (Server Error)
       // if the client payload is invalid.
-      if (model == null)
-      {
+      if (model == null) {
         return StatusCode(StatusCodes.Status500InternalServerError);
       }
 
@@ -118,17 +120,14 @@ namespace TestMakerFreeWebApp.Controllers {
     [HttpPost]
     public IActionResult Post([FromBody] QuizViewModel model)
     {
-      if (model == null)
-      {
+      if (model == null) {
         return StatusCode(StatusCodes.Status500InternalServerError);
       }
 
       var quiz = DbContext.Quizzes.Where(q => q.Id == model.Id).FirstOrDefault();
 
-      if (quiz == null)
-      {
-        return NotFound(new
-        {
+      if (quiz == null) {
+        return NotFound(new {
           Error = $"Quiz ID {model.Id} has not been found."
         });
       }
@@ -154,8 +153,7 @@ namespace TestMakerFreeWebApp.Controllers {
     {
       var quiz = DbContext.Quizzes.Where(q => q.Id == id).FirstOrDefault();
 
-      if (quiz == null)
-      {
+      if (quiz == null) {
         return NotFound(new { Error = $"Quiz ID {id} has not been found." });
       }
       DbContext.Quizzes.Remove(quiz);

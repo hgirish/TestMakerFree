@@ -6,6 +6,8 @@ using Mapster;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace TestMakerFreeWebApp.Controllers {
   [Route("api/[controller]")]
@@ -13,7 +15,10 @@ namespace TestMakerFreeWebApp.Controllers {
   {
 
 
-    public ResultController(ApplicationDbContext dbContext):base(dbContext)
+    public ResultController(ApplicationDbContext context,
+      RoleManager<IdentityRole> roleManager,
+      UserManager<ApplicationUser> userManager,
+      IConfiguration configuration) : base(context, roleManager, userManager, configuration)
     {
      
     }
