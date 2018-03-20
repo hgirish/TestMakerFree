@@ -1,10 +1,12 @@
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using TestMakerFreeWebApp.ViewModels;
@@ -84,7 +86,7 @@ namespace TestMakerFreeWebApp.Controllers {
     /// Adds a new Quiz to the Database
     /// </summary>
     /// <param name="m">The QuizViewModel containing the data to insert</param>
-    [HttpPut]
+    [HttpPut][Authorize]
     public IActionResult Put([FromBody]QuizViewModel model)
     {
       // return a generic HTTP Status 500 (Server Error)
@@ -103,7 +105,7 @@ namespace TestMakerFreeWebApp.Controllers {
       };
       quiz.LastModifiedDate = quiz.CreatedDate;
 
-      quiz.UserId = DbContext.Users.Where(u => u.UserName == "Admin").FirstOrDefault().Id;
+      quiz.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
       DbContext.Quizzes.Add(quiz);
 
@@ -117,7 +119,7 @@ namespace TestMakerFreeWebApp.Controllers {
     /// Edit the Quiz with the given {id}
     /// </summary>
     /// <param name="m">The Quiz containing the data to update</param>
-    [HttpPost]
+    [HttpPost][Authorize]
     public IActionResult Post([FromBody] QuizViewModel model)
     {
       if (model == null) {
@@ -148,7 +150,7 @@ namespace TestMakerFreeWebApp.Controllers {
     /// Deletes the Quiz with the given {id} from the Database
     /// </summary>
     /// <param name="id">The ID of an existing Quiz</param>
-    [HttpDelete("{id}")]
+    [Authorize][HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
       var quiz = DbContext.Quizzes.Where(q => q.Id == id).FirstOrDefault();

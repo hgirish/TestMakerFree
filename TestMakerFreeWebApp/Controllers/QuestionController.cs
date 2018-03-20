@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,7 @@ namespace TestMakerFreeWebApp.Controllers {
     /// Adds a new Question to the Database
     /// </summary>
     /// <param name="m">The QuestionViewModel containing the data to insert</param>
-    [HttpPut]
+    [HttpPut][Authorize]
     public IActionResult Put([FromBody] QuestionViewModel model)
     {
       if (model == null )
@@ -78,7 +79,7 @@ namespace TestMakerFreeWebApp.Controllers {
     /// Edit the Question with the given {id}
     /// </summary>
     /// <param name="m">The QuestionViewModel containing the data to update</param>
-    [HttpPost]
+    [HttpPost][Authorize]
     public IActionResult Post([FromBody]QuestionViewModel model)
     {
       if (model == null)
@@ -109,7 +110,7 @@ namespace TestMakerFreeWebApp.Controllers {
     /// Deletes the Question with the given {id} from the Database
     /// </summary>
     /// <param name="id">The ID of an existing Question</param>
-    [HttpDelete("{id}")]
+    [Authorize][HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
       var question = DbContext.Questions.FirstOrDefault(x => x.Id == id);

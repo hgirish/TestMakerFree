@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -21,6 +21,7 @@ import { ResultListComponent } from './result-list/result-list.component';
 import { ResultEditComponent } from './result-edit/result-edit.component';
 import { QuizSearchComponent } from './quiz-search/quiz-search.component';
 import { AuthService } from './services/auth.service';
+import { AuthInterceptor} from './services/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,13 @@ import { AuthService } from './services/auth.service';
       { path: '**', component:PageNotFoundComponent }
     ])
   ],
-  providers: [AuthService],
+  providers: [AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

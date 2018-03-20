@@ -27,7 +27,7 @@ export class QuizListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(`"QuizListComponent instantiated with the following class ${this.class}`);
+    //console.log(`"QuizListComponent instantiated with the following class ${this.class}`);
     var url = this.baseUrl + "api/quiz/";
     switch (this.class) {    
           
@@ -55,7 +55,7 @@ export class QuizListComponent implements OnInit {
 
   onSelect(quiz: Quiz) {
     this.selectedQuiz = quiz;
-    console.log(`quiz with Id ${this.selectedQuiz.Id} has been selected`);
+  //  console.log(`quiz with Id ${this.selectedQuiz.Id} has been selected`);
     this.router.navigate(["quiz", this.selectedQuiz.Id]);
   }
 

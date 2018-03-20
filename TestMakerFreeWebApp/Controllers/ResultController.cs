@@ -8,6 +8,7 @@ using TestMakerFreeWebApp.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TestMakerFreeWebApp.Controllers {
   [Route("api/[controller]")]
@@ -51,7 +52,7 @@ namespace TestMakerFreeWebApp.Controllers {
     /// Adds a new Answer to the Database
     /// </summary>
     /// <param name="m">The AnswerViewModel containing the data to insert</param>
-    [HttpPut]
+    [Authorize][HttpPut]
     public IActionResult Put([FromBody]ResultViewModel model)
     {
       if (model == null )
@@ -75,7 +76,7 @@ namespace TestMakerFreeWebApp.Controllers {
     /// Edit the Answer with the given {id}
     /// </summary>
     /// <param name="m">The AnswerViewModel containing the data to update</param>
-    [HttpPost]
+    [Authorize][HttpPost]
     public IActionResult Post([FromBody] ResultViewModel model)
     {
       if (model == null)
@@ -107,7 +108,7 @@ namespace TestMakerFreeWebApp.Controllers {
     /// Deletes the Answer with the given {id} from the Database
     /// </summary>
     /// <param name="id">The ID of an existing Answer</param>
-    [HttpDelete("{id}")]
+    [Authorize][HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
       var result = DbContext.Results.FirstOrDefault(i => i.Id == id);

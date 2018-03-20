@@ -1,6 +1,7 @@
 import { Component, OnInit , Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { AuthService} from '../services/auth.service';
 
 @Component({
   selector: 'quiz',
@@ -13,6 +14,7 @@ export class QuizComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
+    public auth:AuthService,
     @Inject('BASE_URL') private baseUrl: string
   ) {
     this.quiz = <Quiz>{};

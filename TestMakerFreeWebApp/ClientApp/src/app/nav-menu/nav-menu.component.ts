@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {Router } from '@angular/router';
+import { AuthService} from '../services/auth.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -6,6 +8,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent {
+  constructor(public auth: AuthService,
+  private router:Router) { }
+
   isExpanded = false;
 
   collapse() {
@@ -14,5 +19,12 @@ export class NavMenuComponent {
 
   toggle() {
     this.isExpanded = !this.isExpanded;
+  }
+
+  logout(): boolean {
+    if (this.auth.logout()) {
+      this.router.navigate([""]);
+    }
+    return false;
   }
 }
