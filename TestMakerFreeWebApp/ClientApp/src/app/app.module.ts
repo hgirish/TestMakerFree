@@ -24,6 +24,7 @@ import { AuthService } from './services/auth.service';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { AuthResponseInterceptor } from './services/auth.response.interceptor';
 import { RegisterComponent } from './register/register.component';
+import { LoginFacebookComponent } from './login-facebook/login-facebook.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { RegisterComponent } from './register/register.component';
     ResultEditComponent,
     QuizSearchComponent,
     RegisterComponent,
+    LoginFacebookComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
