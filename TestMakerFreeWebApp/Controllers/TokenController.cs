@@ -14,167 +14,166 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
 
-namespace TestMakerFreeWebApp.Controllers
-{
-  public class TokenController : BaseApiController {
-    public TokenController(ApplicationDbContext dbContext,
-      RoleManager<IdentityRole> roleManager,
-      UserManager<ApplicationUser> userManager,
-      IConfiguration configuration) : base(dbContext, roleManager, userManager, configuration)
-    {
-    }
-
-    [HttpPost("Auth")]
-    public async Task<IActionResult> Jwt([FromBody]TokenRequestViewModel model)
-    {
-      if (model == null) {
-        return StatusCode(StatusCodes.Status500InternalServerError);
-      }
-
-      switch (model.grant_type) {
-        case "password":
-          return await GetToken(model);
-        case "refresh_token":
-          return await RefreshToken(model);
-        default:
-          return Unauthorized();
-      }
-    }
-
-    private async Task<IActionResult> RefreshToken(TokenRequestViewModel model)
-    {
-      try {
-        var rt = DbContext.Tokens
-          .FirstOrDefault(t => t.ClientId == model.client_id
-          && t.Value == model.refresh_token);
-
-        if (rt == null) {
-          return Unauthorized();
+namespace TestMakerFreeWebApp.Controllers {
+    public class TokenController : BaseApiController {
+        public TokenController(ApplicationDbContext dbContext,
+          RoleManager<IdentityRole> roleManager,
+          UserManager<ApplicationUser> userManager,
+          IConfiguration configuration) : base(dbContext, roleManager, userManager, configuration)
+        {
         }
 
-        var user = await UserManager.FindByIdAsync(rt.UserId);
+        [HttpPost("Auth")]
+        public async Task<IActionResult> Jwt([FromBody]TokenRequestViewModel model)
+        {
+            if (model == null) {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
 
-        if (user == null) {
-          return Unauthorized();
+            switch (model.grant_type) {
+                case "password":
+                    return await GetToken(model);
+                case "refresh_token":
+                    return await RefreshToken(model);
+                default:
+                    return Unauthorized();
+            }
         }
 
-        var rtNew = CreateRefreshToken(rt.ClientId, rt.UserId);
+        private async Task<IActionResult> RefreshToken(TokenRequestViewModel model)
+        {
+            try {
+                var rt = DbContext.Tokens
+                  .FirstOrDefault(t => t.ClientId == model.client_id
+                  && t.Value == model.refresh_token);
 
-        DbContext.Tokens.Remove(rt);
-        DbContext.Tokens.Add(rtNew);
+                if (rt == null) {
+                    return Unauthorized();
+                }
 
-        DbContext.SaveChanges();
+                var user = await UserManager.FindByIdAsync(rt.UserId);
 
-        var response = CreateAccessToken(rtNew.UserId, rtNew.Value);
+                if (user == null) {
+                    return Unauthorized();
+                }
 
-        return Json(response);
+                var rtNew = CreateRefreshToken(rt.ClientId, rt.UserId);
+
+                DbContext.Tokens.Remove(rt);
+                DbContext.Tokens.Add(rtNew);
+
+                DbContext.SaveChanges();
+
+                var response = CreateAccessToken(rtNew.UserId, rtNew.Value);
+
+                return Json(response);
 
 
-      }
-      catch (Exception ex) {
-        Console.WriteLine(ex.Message);
-        return Unauthorized();
-      }
-    }
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return Unauthorized();
+            }
+        }
 
-    private TokenResponseViewModel CreateAccessToken(string userId, string refreshToken)
-    {
-      DateTime now = DateTime.Now;
+        private TokenResponseViewModel CreateAccessToken(string userId, string refreshToken)
+        {
+            DateTime now = DateTime.Now;
 
-      var claims = new[] {
+            var claims = new[] {
         new Claim(JwtRegisteredClaimNames.Sub, userId),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         new Claim(JwtRegisteredClaimNames.Iat,
         new DateTimeOffset(now).ToUnixTimeSeconds().ToString())
       };
 
-      var tokenExpirationMins =
+            int tokenExpirationMins =
         Configuration.GetValue<int>("Auth:Jwt:TokenExpirationInMinutes");
-      var issuserSigningKey = new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes(Configuration["Auth:Jwt:Key"]));
+            var issuserSigningKey = new SymmetricSecurityKey(
+              Encoding.UTF8.GetBytes(Configuration["Auth:Jwt:Key"]));
 
-      var token = new JwtSecurityToken(
-        issuer: Configuration["Auth:Jwt:Issuer"],
-        audience: Configuration["Auth:Jwt:Audience"],
-        claims: claims,
-        notBefore: now,
-        expires: now.Add(TimeSpan.FromMinutes(tokenExpirationMins)),
-        signingCredentials: new SigningCredentials(
-          issuserSigningKey, SecurityAlgorithms.HmacSha256)
-        );
+            var token = new JwtSecurityToken(
+              issuer: Configuration["Auth:Jwt:Issuer"],
+              audience: Configuration["Auth:Jwt:Audience"],
+              claims: claims,
+              notBefore: now,
+              expires: now.Add(TimeSpan.FromMinutes(tokenExpirationMins)),
+              signingCredentials: new SigningCredentials(
+                issuserSigningKey, SecurityAlgorithms.HmacSha256)
+              );
 
-      var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
+            string encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-      return new TokenResponseViewModel {
-        token = encodedToken,
-        expiration = tokenExpirationMins,
-        refresh_token = refreshToken
-      };
+            return new TokenResponseViewModel {
+                token = encodedToken,
+                expiration = tokenExpirationMins,
+                refresh_token = refreshToken
+            };
 
-    }
-
-    private Token CreateRefreshToken(string clientId, string userId) => new Token {
-      ClientId = clientId,
-      UserId = userId,
-      Type = 0,
-      Value = Guid.NewGuid().ToString("N"),
-      CreatedDate = DateTime.UtcNow
-    };
-
-    private async Task<IActionResult> GetToken(TokenRequestViewModel model)
-    {
-      try {
-        var user = await UserManager.FindByNameAsync(model.username);
-        if (user == null && model.username.Contains("@")) {
-          user = await UserManager.FindByEmailAsync(model.username);
-        }
-        if (user == null || !await UserManager.CheckPasswordAsync(user, model.password)) {
-          return Unauthorized();
         }
 
-        var rt = CreateRefreshToken(model.client_id, user.Id);
+        private Token CreateRefreshToken(string clientId, string userId) => new Token {
+            ClientId = clientId,
+            UserId = userId,
+            Type = 0,
+            Value = Guid.NewGuid().ToString("N"),
+            CreatedDate = DateTime.UtcNow
+        };
 
-        DbContext.Tokens.Add(rt);
-        DbContext.SaveChanges();
+        private async Task<IActionResult> GetToken(TokenRequestViewModel model)
+        {
+            try {
+                var user = await UserManager.FindByNameAsync(model.username);
+                if (user == null && model.username.Contains("@")) {
+                    user = await UserManager.FindByEmailAsync(model.username);
+                }
+                if (user == null || !await UserManager.CheckPasswordAsync(user, model.password)) {
+                    return Unauthorized();
+                }
 
-        var t = CreateAccessToken(user.Id, rt.Value);
-        return Json(t);
-        //DateTime now = DateTime.UtcNow;
-        //var claims = new[] {
-        //  new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-        //  new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        //  new Claim(JwtRegisteredClaimNames.Iat,
-        //  new DateTimeOffset(now).ToUnixTimeSeconds().ToString())
-        //};
+                var rt = CreateRefreshToken(model.client_id, user.Id);
 
-        //int tokenExpirationMins =
-        //  Configuration.GetValue<int>("Auth:Jwt:TokenExpirationInMinutes");
-        //var issuerSigningKey = new SymmetricSecurityKey(
-        //  Encoding.UTF8.GetBytes(Configuration["Auth:Jwt:Key"]));
+                DbContext.Tokens.Add(rt);
+                DbContext.SaveChanges();
 
-        //var token = new JwtSecurityToken(
-        //  issuer: Configuration["Auth:Jwt:Issuer"],
-        //  audience: Configuration["Auth:Jwt:Audience"],
-        //  claims: claims,
-        //  notBefore: now,
-        //  expires: now.Add(TimeSpan.FromMinutes(tokenExpirationMins)),
-        //  signingCredentials: new SigningCredentials(
-        //    issuerSigningKey,SecurityAlgorithms.HmacSha256)
-        //  );
+                var t = CreateAccessToken(user.Id, rt.Value);
+                return Json(t);
+                //DateTime now = DateTime.UtcNow;
+                //var claims = new[] {
+                //  new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                //  new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                //  new Claim(JwtRegisteredClaimNames.Iat,
+                //  new DateTimeOffset(now).ToUnixTimeSeconds().ToString())
+                //};
 
-        //string encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
+                //int tokenExpirationMins =
+                //  Configuration.GetValue<int>("Auth:Jwt:TokenExpirationInMinutes");
+                //var issuerSigningKey = new SymmetricSecurityKey(
+                //  Encoding.UTF8.GetBytes(Configuration["Auth:Jwt:Key"]));
 
-        //var response = new TokenResponseViewModel {
-        //  token = encodedToken,
-        //  expiration = tokenExpirationMins
-        //};
-        //return Json(response);
+                //var token = new JwtSecurityToken(
+                //  issuer: Configuration["Auth:Jwt:Issuer"],
+                //  audience: Configuration["Auth:Jwt:Audience"],
+                //  claims: claims,
+                //  notBefore: now,
+                //  expires: now.Add(TimeSpan.FromMinutes(tokenExpirationMins)),
+                //  signingCredentials: new SigningCredentials(
+                //    issuerSigningKey,SecurityAlgorithms.HmacSha256)
+                //  );
 
-      }
-      catch (Exception ex) {
-        Console.WriteLine(ex.Message);
-        return Unauthorized();
-      }
+                //string encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+                //var response = new TokenResponseViewModel {
+                //  token = encodedToken,
+                //  expiration = tokenExpirationMins
+                //};
+                //return Json(response);
+
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return Unauthorized();
+            }
+        }
     }
-  }
 }

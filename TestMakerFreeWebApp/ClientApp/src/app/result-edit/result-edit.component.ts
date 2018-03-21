@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { FormControl, FormBuilder, Validators, FormGroup } from '@angular/forms'
+import { Result } from "../interfaces/result";
 
 @Component({
   selector: 'result-edit',

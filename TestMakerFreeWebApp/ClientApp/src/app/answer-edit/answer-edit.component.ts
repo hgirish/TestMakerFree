@@ -2,6 +2,7 @@ import { Component, OnInit ,Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormControl, FormBuilder, Validators, FormGroup } from '@angular/forms'
+import { Answer } from '../interfaces/answer';
 @Component({
   selector: 'answer-edit',
   templateUrl: './answer-edit.component.html',

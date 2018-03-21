@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import 'rxjs/Rx';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import { TokenResponse } from './token.response';
 
 @Injectable()
 export class AuthService {

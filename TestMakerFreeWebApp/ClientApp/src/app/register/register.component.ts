@@ -3,6 +3,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ValidatorFn } from '@angular/forms/src/directives/validators';
+import { User } from '../interfaces/user';
 
 @Component({
   selector: 'register',

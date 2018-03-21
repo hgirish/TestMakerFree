@@ -1,5 +1,5 @@
-interface Result {
-  Id: number;
+export interface Result {
+ Id: number;
   QuizId: number;
   Text: string;
   MinValue?: number;

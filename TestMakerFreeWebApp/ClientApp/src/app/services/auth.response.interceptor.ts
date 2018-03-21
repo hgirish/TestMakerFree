@@ -36,14 +36,14 @@ export class AuthResponseInterceptor implements HttpInterceptor {
           }
         })
         .catch(error => {
-          return this.handleError(error,next);
+          return this.handleError(error, next);
         });
     } else {
       return next.handle(request)
     }
   }
 
-  handleError(err: any, next:HttpHandler) {
+  handleError(err: any, next: HttpHandler) {
     if (err instanceof HttpErrorResponse) {
       if (err.status === 401) {
         console.log("Token expired. Attempting refresh...");
@@ -61,7 +61,7 @@ export class AuthResponseInterceptor implements HttpInterceptor {
             }
             return next.handle(previousRequest);
           });
-      
+
       }
     }
     return Observable.throw(err);

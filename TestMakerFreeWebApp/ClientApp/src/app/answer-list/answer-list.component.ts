@@ -1,6 +1,8 @@
 import { Component, Inject,OnChanges,SimpleChanges,Input } from '@angular/core';
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
+import { Question } from '../interfaces/question';
+import { Answer } from '../interfaces/answer';
 
 @Component({
   selector: 'answer-list',

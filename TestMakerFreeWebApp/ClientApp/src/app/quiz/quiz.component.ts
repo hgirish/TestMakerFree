@@ -2,6 +2,7 @@ import { Component, OnInit , Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService} from '../services/auth.service';
+import { Quiz } from '../interfaces/quiz';
 
 @Component({
   selector: 'quiz',

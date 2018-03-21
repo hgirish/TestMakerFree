@@ -1,11 +1,11 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpHandler, HttpEvent, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
- 
+
   constructor(private injector: Injector) { }
 
   intercept(request: HttpRequest<any>,
@@ -21,4 +21,5 @@ export class AuthInterceptor implements HttpInterceptor {
     }
     return next.handle(request);
   }
+
 }
