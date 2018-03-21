@@ -21,7 +21,8 @@ import { ResultListComponent } from './result-list/result-list.component';
 import { ResultEditComponent } from './result-edit/result-edit.component';
 import { QuizSearchComponent } from './quiz-search/quiz-search.component';
 import { AuthService } from './services/auth.service';
-import { AuthInterceptor} from './services/auth.interceptor';
+import { AuthInterceptor } from './services/auth.interceptor';
+import { AuthResponseInterceptor } from './services/auth.response.interceptor';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,11 @@ import { AuthInterceptor} from './services/auth.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthResponseInterceptor,
+      multi:true
     }
   ],
   bootstrap: [AppComponent]

@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import 'rxjs/Rx';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
@@ -10,6 +10,7 @@ import 'rxjs/add/observable/throw';
 export class AuthService {
   authKey: string = "auth";
   clientId: string = "TestMakerFree";
+
 
 
   constructor(private http: HttpClient,
@@ -26,22 +27,8 @@ export class AuthService {
       grant_type: "password",
       scope: "offline_access profile email"
     };
-    return this.http.post<TokenResponse>(url, data)
-      .map((res) => {
-        let token = res && res.token;
-        if (token) {
-          this.setAuth(res);
-          return true;
-        }
-       // console.log("auth.service throws unauthorized");
-        return Observable.throw("Unauthorized");
-      })
-      .catch(error => {
-      
-        //console.log('auth.service catch error unauthorzed:' + JSON.stringify(error));
-        return Observable.throw(error);
-        //return new Observable<any>(error);
-      });
+    return this.getAuthFromServer(url, data);
+
   }
 
 
@@ -78,6 +65,34 @@ export class AuthService {
       return localStorage.getItem(this.authKey) != null;
     }
     return false;
+  }
+
+  refreshToken(): Observable<boolean> {
+    var url = "api/token/auth";
+    var data = {
+      client_id: this.clientId,
+      grant_type: "refresh_token",
+      refresh_token: this.getAuth()!.refresh_token,
+      scope: "offline_access profile email"
+    };
+
+    return this.getAuthFromServer(url, data);
+  }
+
+  getAuthFromServer(url: string, data: any): Observable<boolean> {
+    return this.http.post<TokenResponse>(url, data)
+      .map((res) => {
+        let token = res && res.token;
+
+        if (token) {
+          this.setAuth(res);
+          return true;
+        }
+        return Observable.throw("Unauthorized");
+      })
+      .catch(error => {
+        return Observable.throw(error);
+      });
   }
 
 
