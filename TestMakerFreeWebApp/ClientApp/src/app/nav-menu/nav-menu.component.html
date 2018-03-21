@@ -28,7 +28,7 @@
         <li *ngIf="!this.auth.isLoggedIn()"
             class="nav-item" [routerLinkActive]="['link-active']">
           <a [routerLink]="['/login']" class="nav-link">
-            <span class="fas fa-sign-in-alt"></span> Login
+            <span class="fas fa-sign-in-alt"></span> Login / Register
           </a>
         </li>
         <li *ngIf="this.auth.isLoggedIn()"

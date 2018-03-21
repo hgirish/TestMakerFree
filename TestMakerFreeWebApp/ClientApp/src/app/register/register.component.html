@@ -1,0 +1,64 @@
+<div class="login-container">
+  <img id="login-img" class="login-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+  <h2 class="login-title">{{title}}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+    <div *ngIf="form.errors?.register" class="card card-text text-warning">
+      {{form.errors.register}}
+    </div>
+
+    <div class="form-group">
+      <input formControlName="Username" required
+             class="form-control"
+             [ngClass]="{ 'is-invalid': hasError('Username') }"
+             placeholder="Username " />
+      <div *ngIf="hasError('Username')" class="form-text text-danger">
+        Please insert a valid username.
+      </div>
+    </div>
+    <div class="form-group">
+      <input formControlName="Email" required
+             class="form-control"
+             [ngClass]="{ 'is-invalid': hasError('Email') }"
+             placeholder=" Email address" />
+      <div *ngIf="hasError('Email')" class="form-text text-danger">
+        Please insert a valid e-mail address.
+      </div>
+    </div>
+    <div class="form-group">
+      <input type="password" formControlName="Password" required
+             class="form-control"
+             [ngClass]="{ 'is-invalid': hasError('Password') }"
+             placeholder="Password" />
+      <div *ngIf="hasError('Password')" class="form-text text-danger">
+        Please insert a valid password.
+      </div>
+    </div>
+    <div class="form-group">
+      <input type="password" formControlName="PasswordConfirm" required
+             class="form-control"
+             [ngClass]="{ 'is-invalid': hasError('PasswordConfirm') }"
+             placeholder="confirm Password" />
+      <div *ngIf="hasError('PasswordConfirm')" class="form-text text-danger">
+        password and confirm password does not match
+      </div>
+    </div>
+    <div class="form-group">
+      <input formControlName="DisplayName" required autofocus
+             class="form-control"
+             [ngClass]="{ 'is-invalid': hasError('DisplayName') }"
+             placeholder="display name" />
+      <div *ngIf="hasError('DisplayName')" class="form-text text-danger">
+        Please insert a valid display name.
+      </div>
+    </div>
+    
+    <button type="submit" [disabled]="form.invalid"
+            class="btn btn-md btn-success btn-block btn-signin">
+      Register
+    </button>
+    <button type="submit" (click)="onBack()" class="btn btn-md btn-default">Cancel</button>
+  </form>
+
+
+</div>
