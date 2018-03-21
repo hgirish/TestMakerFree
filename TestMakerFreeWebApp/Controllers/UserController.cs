@@ -26,7 +26,7 @@ namespace TestMakerFreeWebApp.Controllers {
       }
       ApplicationUser user = await UserManager.FindByNameAsync(model.UserName);
       if (user != null) {
-        return BadRequest("Username already exists");
+        return BadRequest("UserName already exists");
       }
 
       user = await UserManager.FindByEmailAsync(model.Email);

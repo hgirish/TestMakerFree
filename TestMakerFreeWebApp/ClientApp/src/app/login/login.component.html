@@ -8,11 +8,11 @@
     </div>
 
     <div class="form-group">
-      <input formControlName="Username" required
+      <input formControlName="UserName" required
              class="form-control"
-             [ngClass]="{ 'is-invalid': hasError('Username') }"
-             placeholder="Username or Email address" />
-      <div *ngIf="hasError('Username')" class="form-text text-danger">
+             [ngClass]="{ 'is-invalid': hasError('UserName') }"
+             placeholder="UserName or Email address" />
+      <div *ngIf="hasError('UserName')" class="form-text text-danger">
         Please insert a valid username or e-mail address.
       </div>
     </div>

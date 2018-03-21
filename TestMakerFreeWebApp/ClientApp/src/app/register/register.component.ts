@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-      Username: ['', Validators.required],
+      UserName: ['', Validators.required],
       Email: ['',  [
         Validators.required,
         Validators.email
@@ -64,7 +64,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     var tempUser = <User>{};
-    tempUser.Username = this.form.value.Username;
+    tempUser.UserName = this.form.value.UserName;
     tempUser.Email = this.form.value.Email;
     tempUser.Password = this.form.value.Password;
     tempUser.DisplayName = this.form.value.DisplayName;
@@ -75,7 +75,8 @@ export class RegisterComponent implements OnInit {
       .subscribe(res => {
         if (res) {
           var v = res;
-          console.log(`User ${v.Username} has been created.`);
+          console.log(v);
+          console.log(`User ${v.UserName} ${v.DisplayName} has been created.`);
           this.router.navigate(["login"]);
 
         } else {

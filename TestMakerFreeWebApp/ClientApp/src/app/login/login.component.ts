@@ -22,14 +22,14 @@ export class LoginComponent implements OnInit {
   }
   createForm() {
     this.form = this.fb.group({
-      Username: ['', Validators.required],
+      UserName: ['', Validators.required],
       Password: ['', Validators.required]
     });
   }
 
   onSubmit() {
     var url = this.baseUrl + "api/token/auth";
-    var username = this.form.value.Username;
+    var username = this.form.value.UserName;
     var password = this.form.value.Password;
 
     this.authService.login(username, password)
